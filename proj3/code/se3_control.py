@@ -34,11 +34,9 @@ class SE3Control(object):
         self.k_thrust = quad_params['k_thrust']  # N/(rad/s)**2
         self.k_drag = quad_params['k_drag']  # Nm/(rad/s)**2
 
-        # You may define any additional constants you like including control gains.
+        # Additional constants including control gains.
         self.inertia = np.diag(np.array([self.Ixx, self.Iyy, self.Izz]))  # kg*m^2
         self.g = 9.81  # m/s^2
-
-        # STUDENT CODE HERE
 
         # self.Kd = np.array([[8.5, 0, 0], [0, 8.5, 0], [0, 0, 8.5]])
         # self.Kp = np.array([[5, 0, 0], [0, 5, 0], [0, 0, 5]])
@@ -139,7 +137,6 @@ class SE3Control(object):
         cmd_moment = np.zeros((3,))
         cmd_q = np.zeros((4,))
 
-        # STUDENT CODE HERE
         x_ddot_des = flat_output['x_ddot'].reshape(3, 1) - (
                     self.Kd @ (state['v'] - flat_output['x_dot']).reshape(3, 1)) - (
                                  self.Kp @ (state['x'] - flat_output['x']).reshape(3, 1))
@@ -156,12 +153,12 @@ class SE3Control(object):
         b2_des = b2_des.reshape(3, 1)
         # print("b2_des", "\n", b2_des)
         R_des = np.zeros((3, 3))
-        # sim = np.cross(b2_des.T, b3_des.T).reshape(3,1)
+       
         # print("sim", "\n", sim)
         R_des[:, 0] = np.cross(b2_des.T, b3_des.T)
         R_des[:, 1] = b2_des.T
         R_des[:, 2] = b3_des.T
-        # R_des = np.array([np.cross(b2_des.T, b3_des.T).reshape(3,1), b2_des, b3_des])
+        
 
         eR_temp = (R_des.T @ R) - (R.T @ R_des)
         eR = np.array([eR_temp[2, 1], eR_temp[0, 2], eR_temp[1, 0]]) / 2
@@ -180,7 +177,6 @@ class SE3Control(object):
         mat_temp = np.array([[1, 1, 1, 1], [0, L, 0, -L], [-L, 0, L, 0], [gamma, -gamma, gamma, -gamma]])
         motor_thrusts = np.linalg.inv(mat_temp) @ u / self.k_thrust
         # print("motor_thrusts", "\n", motor_thrusts)
-        # cmd_motor_speeds = np.sqrt(np.abs(motor_thrusts) / self.k_thrust)
         cmd_motor_speeds = np.sqrt(np.clip(motor_thrusts, self.rotor_speed_min ** 2, self.rotor_speed_max ** 2))
         cmd_q = Rotation.from_matrix(R_des).as_quat()
 
