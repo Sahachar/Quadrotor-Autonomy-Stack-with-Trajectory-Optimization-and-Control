@@ -8,11 +8,6 @@ from .occupancy_map import OccupancyMap # Recommended.
 
 
 def h_condition(v, v_goal):
-    # return ((v[0] - v_goal[0]) * 2 + (v[1] - v_goal[1]) * 2 + (v[2] - v_goal[2]) * 2) * .5
-    # return np.linalg.norm(v-v_goal)
-    # print("v: ", v)
-    # print("v_goal: ", v_goal)
-    # print(np.sum(np.asarray(v)-np.asarray(v_goal)))
     return np.sum(np.asarray(v)-np.asarray(v_goal))
 
 
@@ -35,12 +30,13 @@ def graph_search(world, resolution, margin, start, goal, astar):
         nodes_expanded, the number of nodes that have been expanded
     """
 
-    # While not required, we have provided an occupancy map you may use or modify.
+    # Occupancy map
     occ_map = OccupancyMap(world, resolution, margin)
     # Retrieve the index in the occupancy grid matrix corresponding to a position in space.
     start_index = tuple(occ_map.metric_to_index(start))
     goal_index = tuple(occ_map.metric_to_index(goal))
 
+    # Possible neighbours at current location
     map_ = occ_map.map
     trav = [-1, 0, 1]
     neighbours = []
@@ -51,6 +47,7 @@ def graph_search(world, resolution, margin, start, goal, astar):
     neighbours = np.array(neighbours)
     neighbours = np.delete(neighbours, 13, axis=0)
 
+    # A-Star
     if (astar == True):
         Q = queue.PriorityQueue()
         Q.put((h_condition(start_index, goal_index), start_index, 0, [start_index]))
@@ -78,6 +75,7 @@ def graph_search(world, resolution, margin, start, goal, astar):
                                path_cost + c_v, path_idx + [(it_x, it_y, it_z)]))
         return None, 0
 
+    # Dijkstra's
     else:
         expanded = set()
         Q = queue.PriorityQueue()
