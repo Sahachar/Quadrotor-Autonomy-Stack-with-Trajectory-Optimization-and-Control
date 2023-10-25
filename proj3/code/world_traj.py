@@ -26,20 +26,18 @@ class WorldTraj(object):
             goal,  xyz position in meters, shape=(3,)
 
         """
-        # You must choose resolution and margin parameters to use for path
-        # planning. In the previous project these were provided to you; now you
-        # must chose them for yourself. Your may try these default values, but
-        # you should experiment with them!
+        # Choose resolution and margin parameters to use for path
+        # planning.
         self.resolution = np.array([0.25, 0.25, 0.25])
         self.margin = 0.61
         self.alpha = 0.99 # takes [0,1] towards self.margin
-        # You must store the dense path returned from your Dijkstra or AStar
-        # graph search algorithm as an object member. You will need it for
+        # Store the dense path returned from your Dijkstra or AStar
+        # graph search algorithm as an object member. Will need it for
         # debugging, it will be used when plotting results.
         self.path, _ = graph_search(world, self.resolution, self.margin, start, goal, astar=True)
-        # You must generate a sparse set of waypoints to fly between. Your
+        # Generate a sparse set of waypoints to fly between. The
         # original Dijkstra or AStar path probably has too many points that are
-        # too close together. Store these waypoints as a class member; you will
+        # too close together. Store these waypoints as a class member; will
         # need it for debugging and it will be used when plotting results.
         self.points = np.zeros((1,3)) # shape=(n_pts,3)
         # self.remove_collinear_prox()
@@ -47,14 +45,9 @@ class WorldTraj(object):
         self.points = self.path #####______USE WHEN ONLY USING STRAIGHTEN()______########
         self.pruner(world)
 
+        # Compute a trajectory through the waypoints using the WaypointTraj object. 
 
-        # Finally, you must compute a trajectory through the waypoints similar
-        # to your task in the first project. One possibility is to use the
-        # WaypointTraj object you already wrote in the first project. However,
-        # you probably need to improve it using techniques we have learned this
-        # semester.
-
-        # STUDENT CODE HERE
+        
         self.vel = 8
         dist_vec = np.diff(self.points, n=1, axis=0)
         self.dist = np.linalg.norm(dist_vec, axis=1)
@@ -64,27 +57,10 @@ class WorldTraj(object):
             self.points = np.delete(self.points, self.points.shape[0]-2, axis=0)
             self.t_i[-2] += self.t_i[-1]
             self.t_i = np.delete(self.t_i, self.t_i.shape[0]-1, axis=0)
-        # if self.t_i.shape[0] == 9:
-        #     # self.points = np.delete(self.points, 1+1, axis=0)
-        #     # self.t_i[1] += self.t_i[1+1]
-        #     # self.t_i = np.delete(self.t_i, 1+1, axis=0)
-        #     self.points = np.delete(self.points, 1 + 5, axis=0)
-        #     self.t_i[5] += self.t_i[1 + 5]
-        #     self.t_i = np.delete(self.t_i, 1+5, axis=0)
-
-
-        # ###---Add Points Here---###
-        # self.add_points(world)
-        # dist_vec = np.diff(self.points, n=1, axis=0)
-        # self.dist = np.linalg.norm(dist_vec, axis=1)
-        # self.t_i = self.dist / self.vel
-        # self.t_i = self.t_i.reshape(-1, 1)
 
         self.m = self.t_i.shape[0]
         ti_cp = self.t_i*1
         print("T_i BEFORE Dilation: ", self.t_i)
-
-
 
         #End-point velocity capping ()slowing
         corner_thresh = 0.3*6/self.vel
@@ -276,43 +252,6 @@ class WorldTraj(object):
 
 
     def remove_collinear_prox(self):
-        # path_cp = self.path
-        # # path_cp1 = self.path
-        # temp = np.delete(path_cp, -1, axis=0)
-        # temp1 = np.delete(path_cp, 0, axis=0)
-        #
-        # diff = temp1 - temp
-        # diff1 = np.delete(diff, 0, axis=0)
-        # diff = np.delete(diff, -1, axis=0)
-        #
-        # cross = np.cross(diff1, diff)
-        # cross = np.linalg.norm(cross, axis=1)
-        #
-        # index = []
-        # index_1 = [0]
-        # for i, value in enumerate(cross):
-        #     if value == 0 and cross[i + 1] == 0:
-        #         # if value == 0:
-        #         index.append(i + 1)
-        #     if value != 0:
-        #         index_1.append(i + 1)
-        # index_1.append(self.path.shape[0] - 1)
-        #
-        # # self.path = np.delete(self.path, index, axis=0)
-        # self.path = self.path[index_1]
-        # path_n = self.path
-        # # dist_norm = np.linalg.norm(self.path[1:] - self.path[0:-1], axis=1)
-        # path_n_lastp = path_n[-1]
-        # while i < path_n.shape[0]-1:
-        #     dist_norm = np.linalg.norm(path_n[i+1] - path_n[i])
-        #     if dist_norm <= np.linalg.norm(self.resolution):
-        #         path_n = np.delete(path_n, i+1, 0)
-        #         i -= 1
-        #     i += 1
-        # if path_n[-1][0] != path_n_lastp[0] and path_n[-1][1] != path_n_lastp[1] and path_n[-1][2] != path_n_lastp[2]:
-        #     path_n = np.append(path_n, path_n_lastp.reshape(1,3), axis=0)
-        # self.points = path_n
-        # print(self.points.shape[0])
 
         path_cp = self.path
         path_cp_lastp = path_cp[-1]
