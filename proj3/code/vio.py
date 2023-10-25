@@ -22,7 +22,6 @@ def nominal_state_update(nominal_state, w_m, a_m, dt):
     # Unpack nominal_state tuple
     p, v, q, a_b, w_b, g = nominal_state
 
-    # YOUR CODE HERE
     new_p = np.zeros((3, 1))
     new_v = np.zeros((3, 1))
     new_q = Rotation.identity()
@@ -59,14 +58,11 @@ def error_covariance_update(nominal_state, error_state_covariance, w_m, a_m, dt,
     # Unpack nominal_state tuple
     p, v, q, a_b, w_b, g = nominal_state
 
-    # YOUR CODE HERE
     R = Rotation.as_matrix(q)
     vec = (w_m - w_b) * dt
     R_ = Rotation.as_matrix(Rotation.from_rotvec(vec.flatten()))
     a = (a_m-a_b)
-    # a_hat = np.array([[0, -(a_m-a_b)[-1], (a_m-a_b)[1]],
-    #                   [(a_m-a_b)[-1], 0, -(a_m-a_b)[0]],
-    #                   [-(a_m-a_b)[1], (a_m-a_b)[0], 0]])
+
     a_hat = np.array([[0, -a[-1][0], a[1][0]],
                       [a[-1][0], 0, -a[0][0]],
                       [-a[1][0], a[0][0], 0]])
@@ -121,7 +117,7 @@ def measurement_update_step(nominal_state, error_state_covariance, uv, Pw, error
     # Unpack nominal_state tuple
     p, v, q, a_b, w_b, g = nominal_state
 
-    # YOUR CODE HERE - compute the innovation next state, next error_state covariance
+    # Compute the innovation next state, next error_state covariance
     innovation = np.zeros((2, 1))
     R = Rotation.as_matrix(q)
     Pc = (R.T) @ (Pw-p)
