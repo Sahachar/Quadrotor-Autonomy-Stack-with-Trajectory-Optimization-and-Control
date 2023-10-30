@@ -11,6 +11,10 @@ import matplotlib.pyplot as plt
 from scipy.spatial.transform import Rotation
 from numpy.linalg import norm
 
+import sys
+sys.path.append("PathTo/Quadrotor_autonomy_stack")
+# print(sys.path)
+
 from flightsim.simulate import Quadrotor, simulate, ExitStatus
 from flightsim.world import World
 from flightsim.animate import animate
