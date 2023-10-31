@@ -1,4 +1,4 @@
-Quadrotor-Autonomy-Stack-with-Trajectory-Optimization-and-Control
+# Quadrotor-Autonomy-Stack-with-Trajectory-Optimization-and-Control
 ========================================
 
 ###### Author: Sahachar Reddy Tippana
