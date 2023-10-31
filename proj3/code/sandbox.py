@@ -12,8 +12,9 @@ from scipy.spatial.transform import Rotation
 from numpy.linalg import norm
 
 import sys
-sys.path.append("PathTo/Quadrotor_autonomy_stack")
-# print(sys.path)
+flightsim_path = "PathTo/Quadrotor_autonomy_stack"
+if flightsim_path not in sys.path:
+    sys.path.append(flightsim_path)
 
 from flightsim.simulate import Quadrotor, simulate, ExitStatus
 from flightsim.world import World
